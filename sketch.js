@@ -1,6 +1,7 @@
 let webcam;
 let squareSystem = [];
 let scale = 18;
+let colorSlider;
 
 function setup() {
   createCanvas(400, 400);
@@ -8,6 +9,10 @@ function setup() {
   webcam = createCapture(VIDEO);
   webcam.size(width / scale, height / scale);
   webcam.hide();
+  
+  // Create a slider to adjust color (alpha)
+  colorSlider = createSlider(0, 255, 120);
+  colorSlider.position(10, height + 10); 
   
   for (let x = 0; x < 200; x++) {
     let rx = random(15, width - 15);
@@ -42,7 +47,12 @@ class Square {
     let pX = this.x / scale;
     let pY = this.y / scale;
     let pixelColor = webcam.get(pX, pY);
-    fill(pixelColor[0], pixelColor[1], pixelColor[2], 120);
+    
+    // Get the current value of the slider for alpha transparency
+    let sliderValue = colorSlider.value();
+    
+    // Apply the slider value to the alpha channel of the webcam color
+    fill(pixelColor[0], pixelColor[1], pixelColor[2], sliderValue);
     noStroke();
     rect(this.x, this.y, this.r, this.r); 
   }
